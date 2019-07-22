@@ -27,8 +27,12 @@ func getInput() -> String? {
     let lineIn = readLine()
     return lineIn
 }
+
+func space() {
+    print("")
+}
 func continuePlayingMessage() {
-    print("Calculate again? Yes or no?")
+    print("Calculate again? yes or no?")
 }
 
 func notValidMessage() {
@@ -48,7 +52,6 @@ func unbindOptionalStringInput() -> String {
 func getUserInput() -> [String]  {
     let optionalUserInput = getInput()
     guard let userInput = optionalUserInput else {
-        print("Hey, you didn't anything")
         return []
     }
     
@@ -83,15 +86,17 @@ func isAnOperation(userOperation: String) -> Bool {
     return true
 }
 
-// return bool
+
 func isInputValid(arrayOfStrings: [String]) -> Bool {
     if arrayOfStrings.count != 5 {
         notValidMessage()
+        space()
         return false
     }
     
     if !methods.contains(arrayOfStrings[0]) {
         notValidMessage()
+        space()
         return false
     }
     
@@ -99,38 +104,42 @@ func isInputValid(arrayOfStrings: [String]) -> Bool {
     for i in arrayOfFirstIndex {
         guard Int(i) != nil else {
             notValidMessage()
+            space()
             return false
         }
     }
     
     if !(arrayOfStrings[2] == "by") {
         notValidMessage()
+        space()
         return false
     }
     
     if !symbols.contains(arrayOfStrings[3]) {
         notValidMessage()
+        space()
         return false
     }
     
     guard Int(arrayOfStrings[4]) != nil else {
         notValidMessage()
+        space()
         return false
     }
     return true
 }
 
-func buildAString(arr: [Any]){
-    var stringArr = ""
+func buildAString(arr: [Any]) -> String{
+    var string = ""
     
     for (index, num) in arr.enumerated() {
         if index == arr.count - 1 {
-            stringArr.append("\(num) ")
+            string.append("\(num) ")
         } else{
-            stringArr.append("\(num), ")}
+            string.append("\(num), ")}
     }
     
-    print(stringArr)
+    return string
 }
 
 func buildingArrFromString(str:String) -> [Int] {
@@ -186,14 +195,18 @@ func Calculator() {
         result = closure(firstNum, secNum)
         
         print("\(userInputArr.joined(separator: " ")) = \(result)")
+        space()
     }
 }
 
-//Calculator()
+
 
 func gameOperator() {
-    print("Enter operation")
-    
+    print("Can you guess the operation used?")
+    sleep(1)
+    space()
+    print(" Let's try! Ex. 10 ? 3")
+    space()
     let userInputArr = getUserInput()
     
     if userInputArr == [] {
@@ -215,8 +228,8 @@ func gameOperator() {
     }
     
     print(result)
-    
-    print("Guess the operator")
+    space()
+    print("Guess the operator: \(buildAString(arr: arrayOfOperators))")
     
     let optionalUserInput = getInput()
     
@@ -224,96 +237,117 @@ func gameOperator() {
     
     if UserInput == randomOperator {
         print("Corect!")
+        space()
+    } else if !arrayOfOperators.contains(UserInput){
+        notValidMessage()
+        print("The correct answer was \(randomOperator)")
+        space()
     } else {
         print("Sorry! The correct answer was \(randomOperator)")
+        space()
     }
 }
 
-//gameOperator()
+
 
 
 
 func highOrder() {
     
-    print("choose filter, reduce, or map")
+    print("Enter your higher order operation: \(buildAString(arr: methods))")
+    
+    print(" Ex. filter 1,5,2,7,3,4 by < 4 ")
+    
+    space()
     
     let optionalUserInput = getInput()
     
     guard var userInput = optionalUserInput else {return}
     userInput = userInput.lowercased()
     
-    let userInputArry = userInput.components(separatedBy: " ")
+    let userInputArr = userInput.components(separatedBy: " ")
     
-    if !isInputValid(arrayOfStrings: userInputArry) {
+    if !isInputValid(arrayOfStrings: userInputArr) {
         return
     }
     
-    let arrayOfInts = buildingArrFromString(str: userInputArry[1])
+    let arrayOfInts = buildingArrFromString(str: userInputArr[1])
     
-    if userInputArry[3] == ">" || userInputArry[3] == "<" {
-        if userInputArry[3] == ">" {
-            let myFilteredArr = myFilter(inputArray: arrayOfInts,  filter: {$0 > Int(userInputArry[4])!})
-            buildAString(arr: myFilteredArr)
-        }
+    if userInputArr[0] == "filter" {
         
-        if userInputArry[3] == "<" {
-            let myFilteredArr = myFilter(inputArray: arrayOfInts,  filter: {$0 < Int(userInputArry[4])!})
-            buildAString(arr: myFilteredArr)
-        }
-        
-    }
-    
-    if userInputArry[0] == "reduce" {
-        
-        if !(userInputArry[3] == "*") && !(userInputArry[3] == "+") {
+        if !(userInputArr[3] == ">") && !(userInputArr[3] == "<") {
             notValidMessage()
+            space()
             return
         }
         
-        if userInputArry[3] == "*" {
-            let myReducedArr = myReduce(inputArray: arrayOfInts, initial: Int(userInputArry[4])!, reduce: {$0 * $1})
-            print(myReducedArr)
+        if userInputArr[3] == ">" {
+            let myFilteredArr = myFilter(inputArray: arrayOfInts,  filter: {$0 > Int(userInputArr[4])!})
+            print(buildAString(arr: myFilteredArr))
+            space()
         }
-        
-        if userInputArry[3] == "+" {
-            let myReducedArr = myReduce(inputArray: arrayOfInts, initial: Int(userInputArry[4])!, reduce: {$0 + $1})
-            print(myReducedArr)
-        }
-    }
-    
-    if userInputArry[0] == "map" {
-        
-        if !(userInputArry[3] == "*") && !(userInputArry[3] == "/") {
-            notValidMessage()
-            return
-        }
-        
-        if userInputArry[3] == "/" {
-            let myMapArr = myMap(inputArray: arrayOfInts, map: {Double($0) / Double(userInputArry[4])!})
-            buildAString(arr: myMapArr)
-        }
-        
-        if userInputArry[3] == "*" {
-            let myMapArr = myMap(inputArray: arrayOfInts, map: {$0 * Int(userInputArry[4])!})
-            buildAString(arr: myMapArr)
-        }
-    }
-    
-    
-    
-    
-}
 
-//highOrder()
+        if userInputArr[3] == "<" {
+            let myFilteredArr = myFilter(inputArray: arrayOfInts,  filter: {$0 < Int(userInputArr[4])!})
+            print(buildAString(arr: myFilteredArr))
+            space()
+        }
+    }
+    
+    
+    if userInputArr[0] == "reduce" {
+        
+        if !(userInputArr[3] == "*") && !(userInputArr[3] == "+") {
+            notValidMessage()
+            space()
+            return
+        }
+        
+        if userInputArr[3] == "*" {
+            let myReducedArr = myReduce(inputArray: arrayOfInts, initial: Int(userInputArr[4])!, reduce: {$0 * $1})
+            print(myReducedArr)
+            space()
+        }
+        
+        if userInputArr[3] == "+" {
+            let myReducedArr = myReduce(inputArray: arrayOfInts, initial: Int(userInputArr[4])!, reduce: {$0 + $1})
+            print(myReducedArr)
+            space()
+        }
+    }
+    
+    if userInputArr[0] == "map" {
+        
+        if !(userInputArr[3] == "*") && !(userInputArr[3] == "/") {
+            notValidMessage()
+            space()
+            return
+        }
+        
+        if userInputArr[3] == "/" {
+            let myMapArr = myMap(inputArray: arrayOfInts, map: {Double($0) / Double(userInputArr[4])!})
+            print(buildAString(arr: myMapArr))
+            space()
+        }
+        
+        if userInputArr[3] == "*" {
+            let myMapArr = myMap(inputArray: arrayOfInts, map: {$0 * Int(userInputArr[4])!})
+            print(buildAString(arr: myMapArr))
+            space()
+        }
+    }
+}
 
 
 
 var play = true
+var secondChance = true
 
 while play {
-    print("choose 1(Regular Calc), 2 (Game) or 3 (Higher Order Functions)")
+    print("Choose 1 (Regular Calc), 2 (Game) or 3 (Higher Order Functions)")
     
     var userInput = unbindOptionalStringInput()
+    
  
     switch userInput {
         case "1":
@@ -342,8 +376,14 @@ while play {
             }
             
         default:
-            notValidMessage()
+            if secondChance {
+                notValidMessage()
+                space()
+                secondChance = false
+                continue
+            }
             play = false
+    
     }
     
 }
