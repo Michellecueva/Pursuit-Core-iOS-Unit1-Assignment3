@@ -202,7 +202,7 @@ func Calculator() {
 
 
 func gameOperator() {
-    print("Can you guess the operation used?")
+    print("Give me a statement and I will give you the result")
     sleep(1)
     space()
     print(" Let's try! Ex. 10 ? 3")
@@ -222,12 +222,14 @@ func gameOperator() {
     if userInputArr[1] == "?" {
         guard let closure = operations[randomOperator] else { exit(0)  }
         result = closure(firstNum, secNum)
+        space()
     } else {
         notValidMessage()
+        space()
         return
     }
     
-    print(result)
+    print("The result is \(result). Can you guess the operation used?")
     space()
     print("Guess the operator: \(buildAString(arr: arrayOfOperators))")
     
@@ -255,8 +257,10 @@ func gameOperator() {
 func highOrder() {
     
     print("Enter your higher order operation: \(buildAString(arr: methods))")
-    
+    space()
     print(" Ex. filter 1,5,2,7,3,4 by < 4 ")
+    print(" Ex. reduce 1,5,2,7,3,4 by + 4 ")
+    print(" Ex. map 1,5,2,7,3,4 by * 4 ")
     
     space()
     
